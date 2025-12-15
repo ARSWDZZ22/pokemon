@@ -1,21 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import '../model/pokemon.dart';
 
-class PokemonCardWidget extends StatelessWidget {
-  final Pokemon pokemon;
-  final Logger _logger = Logger();
+class PokemonContainerWidget extends StatelessWidget {
+  final Widget child;
+  final String type;
 
-  const PokemonCardWidget({super.key, required this.pokemon});
+  const PokemonContainerWidget({
+    super.key,
+    required this.child,
+    required this.type,
+  });
 
   @override
   Widget build(BuildContext context) {
-    _logger.d('Building card for ${pokemon.name}');
-    return Card(
-      child: ListTile(
-        leading: Image.network(pokemon.imageUrl),
-        title: Text(pokemon.name),
-        subtitle: Text(pokemon.type),
+    return Container(
+      decoration: BoxDecoration(
+        color: type == 'Grass'
+            ? Color(0xFFC2E5D5)
+            : type == 'Fire'
+            ? Color(0xFFEBBCB5)
+            : type == 'Water'
+            ? Color(0xFFBEDBDD)
+            : Colors.grey[200],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
+}
+
+class PokemonCardWidget extends StatelessWidget {
+  static final _logger = Logger();
+  final String imageUrl;
+  final String name;
+  final String type;
+  final VoidCallback? onTap;
+
+  const PokemonCardWidget({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    required this.type,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        _logger.i('Card tapped: $name');
+        if (onTap != null) {
+          onTap!();
+        }
+      },
+      child: PokemonContainerWidget(
+        type: type,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.network(imageUrl, height: 100, width: 100),
+            SizedBox(height: 10),
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF223345),
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'Type: $type',
+              style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+            ),
+          ],
+        ),
       ),
     );
   }
