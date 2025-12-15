@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'detail_page.dart';
+import 'detile_page.dart';
 import 'model/dummy_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget listPokemon() {
+  Widget listPokemon(dynamic dummyPokemonList) {
     return Expanded(
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -100,3 +100,62 @@ class _HomePageState extends State<HomePage> {
           crossAxisSpacing: 10,
           mainAxisSpacing: 8,
           childAspectRatio: 3 / 4,
+        ),
+        itemCount: dummyPokemonList.length,
+        itemBuilder: (context, index) {
+          final pokemon = dummyPokemonList[index];
+
+          return GestureDetector(
+            onTap: () async {
+              try {
+                await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailPage(pokemon: pokemon),
+                  ),
+                );
+              } catch (e) {
+                // menangangani kesalahan navigasi tanpa notifikasi di production
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: pokemon.type == 'Grass'
+                    ? Color(0xFFC2E5D5)
+                    : pokemon.type == 'Fire'
+                    ? Color(0xFFEBBCB5)
+                    : pokemon.type == 'Water'
+                    ? Color(0xFFBEDBDD)
+                    : Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Image.network(pokemon.imageUrl, fit: BoxFit.contain),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    pokemon.name,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF223345),
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    'Type: ${pokemon.type}',
+                    style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
