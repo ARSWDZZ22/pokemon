@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'detile_page.dart';
 import 'model/dummy_data.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -26,7 +27,7 @@ class _HomePageState extends State<HomePage> {
               SizedBox(height: 20),
               searchBar(searchNameController),
               SizedBox(height: 20),
-              listPokemon(),
+              listPokemon(dummyPokemonList),
             ],
           ),
         ),
@@ -111,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                 await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => DetailPage(pokemon: pokemon),
+                    builder: (context) => DetilePage(pokemon: pokemon),
                   ),
                 );
               } catch (e) {
